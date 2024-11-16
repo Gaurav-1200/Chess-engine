@@ -77,3 +77,6 @@ class Game:
     
     def set_hover(self,row,col):
         self.hovered_square = self.board.squares[row][col]
+
+    def reset_game(self):
+        self.__init__()

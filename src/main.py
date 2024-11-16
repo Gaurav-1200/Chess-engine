@@ -92,6 +92,13 @@ class Main:
                 elif event.type== pygame.QUIT:  #quit
                     pygame.quit()
                     sys.exit()
+                
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        game.reset_game()
+                        game= self.game
+                        board = self.game.board
+                        dragger =self.game.dragger
 
             pygame.display.update()
 
