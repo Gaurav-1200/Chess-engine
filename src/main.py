@@ -26,7 +26,9 @@ class Main:
             game.show_bg(screen)
             game.show_last_move(screen)
             game.show_moves(screen)
+            game.show_hovered_square(screen)
             game.show_pieces(screen)
+            
 
             if dragger.dragging:
                 dragger.update_blit(screen)
@@ -47,16 +49,21 @@ class Main:
                             game.show_bg(screen)
                             game.show_last_move(screen)
                             game.show_moves(screen)
+                            game.show_hovered_square(screen)
                             game.show_pieces(screen)
 
 
                 elif event.type == pygame.MOUSEMOTION: #move
+                    motion_row = event.pos[1] // SQSIZE
+                    motion_col = event.pos[0] //SQSIZE
+                    game.set_hover(motion_row,motion_col)
                     if dragger.dragging:
                         print("888888888888888888888")
                         dragger.update_mouse(event.pos)
                         game.show_bg(screen)
                         game.show_last_move(screen)
                         game.show_moves(screen)
+                        game.show_hovered_square(screen)
                         game.show_pieces(screen)
                         dragger.update_blit(screen)
                         
@@ -74,6 +81,8 @@ class Main:
                             board.move(dragger.piece,move)
                             game.show_bg(screen)
                             game.show_last_move(screen)
+                            game.show_hovered_square(screen)
+
                             game.show_pieces(screen)
                            
                             #change player

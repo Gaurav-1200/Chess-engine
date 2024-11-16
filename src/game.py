@@ -8,6 +8,7 @@ class Game:
         self.board= Board()
         self.dragger= Dragger()
         self.next_player = 'white'
+        self.hovered_square = None
 
     def show_bg(self,surface):
         for row in range(ROWS):
@@ -59,8 +60,20 @@ class Game:
                 rect = (pos.col*SQSIZE, pos.row*SQSIZE,SQSIZE,SQSIZE)
                 #blit
                 pygame.draw.rect(surface,color,rect)
+            
+    def show_hovered_square(self,surface):
+        if self.hovered_square:
+            #color
+            color = (180,180,180) 
+            #rect
+            rect = (self.hovered_square.col*SQSIZE, self.hovered_square.row*SQSIZE,SQSIZE,SQSIZE)
+            #blit
+            pygame.draw.rect(surface,color,rect,width=3)
 
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
         return self.next_player
+    
+    def set_hover(self,row,col):
+        self.hovered_square = self.board.squares[row][col]
