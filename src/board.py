@@ -31,7 +31,6 @@ class Board:
         steps = 1 if piece.moved else 2
 
         #vertical mvmnt
-        print("------------>",piece.color,piece.dir)
         start =  row + piece.dir
         end = row + ((steps+1) *  piece.dir)
         for possible_move_row in range(start,end,piece.dir):  #as range is [)
@@ -66,15 +65,33 @@ class Board:
                 else:
                     break
             else : break
-                   
-
-
         
+    def straight_line_moves(self, row, col, piece,increments):
+        for incr in increments:
+            row_incr, col_incr = incr
+            possible_move_row =  row + row_incr
+            possible_move_col =  col + col_incr
 
+            while(1):
+                if isValidPos(possible_move_row, possible_move_col):
+                    initial = Square(row,col,piece)
+                    final = Square(possible_move_row,possible_move_col,piece)
 
-
-            
-
+                    #create Move
+                    move = Move(initial=initial,final=final)
+                    if(self.squares[possible_move_row][possible_move_col].is_empty()):
+                        piece.add_move(move)
+                        
+                    if(self.squares[possible_move_row][possible_move_col].has_rival_piece(piece.color)):
+                        piece.add_move(move)
+                        break
+                    if(self.squares[possible_move_row][possible_move_col].has_team_piece(piece.color)):
+                        break
+                else:
+                    break
+                possible_move_row = possible_move_row + row_incr
+                possible_move_col = possible_move_col + col_incr
+                    
 
 
     def calc_moves(self,piece, row, col):
@@ -87,11 +104,11 @@ class Board:
         elif piece.name == KNIGHT:
             self.knight_moves(row,col,piece)
         elif piece.name == BISHOP:
-            pass
+            self.straight_line_moves(row,col,piece,[(-1,1),(-1,-1),(1,1),(1,-1)])
         elif piece.name == ROOK:
-            pass
+            self.straight_line_moves(row,col,piece,[(-1,0),(0,1),(1,0),(0,-1)])
         elif piece.name == QUEEN:
-            pass
+            self.straight_line_moves(row,col,piece,[(-1,0),(0,1),(1,0),(0,-1),(-1,1),(-1,-1),(1,1),(1,-1)])
         elif piece.name == KING:
             pass
 
@@ -108,7 +125,6 @@ class Board:
         #Pawn
         for col in range(COLS):
             self.squares[row_pawn][col] = Square(row_pawn,col,Pawn(color))
-        self.squares[4][4] =Square(4,4,Pawn(color))
         
         #Knights
         for col in (1,6):
@@ -117,6 +133,11 @@ class Board:
         #Bishops
         for col in (2,5):
             self.squares[row_other][col]= Square(row_other,col,Bishop(color))
+        self.squares[4][4] =Square(4,4,Bishop(color))
+        self.squares[4][6] =Square(4,6,Rook(color))
+        self.squares[6][4] =Square(6,4,Queen(color))
+
+
 
         #Queens
         for col in [3]:
