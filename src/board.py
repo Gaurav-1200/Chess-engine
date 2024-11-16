@@ -24,13 +24,57 @@ class Board:
                 #create Move
                 move = Move(initial=initial,final=final)
                 piece.add_move(move)
+        print(possible_moves)
+        
 
+    def pawn_moves(self, row, col, piece):
+        steps = 1 if piece.moved else 2
+
+        #vertical mvmnt
+        print("------------>",piece.color,piece.dir)
+        start =  row + piece.dir
+        end = row + ((steps+1) *  piece.dir)
+        for possible_move_row in range(start,end,piece.dir):  #as range is [)
+            if isValidPos(possible_move_row,col):
+                if(self.squares[possible_move_row][col].is_empty()):
+                    #Create square for move
+                    initial = Square(row,col,piece)
+                    final = Square(possible_move_row,col,piece)
+
+                    #create Move
+                    move = Move(initial=initial,final=final)
+                    piece.add_move(move)
+                else :   #blocked
+                    break
+            else:  #blocked
+                break 
+        
+        #diagonal mvmnt
+        possible_move_row = row + piece.dir
+        possible_move_cols = [col-1, col+1]
+
+        for possible_move_col in possible_move_cols:
+            if isValidPos(possible_move_row, possible_move_col):
+                if(self.squares[possible_move_row][possible_move_col].has_rival_piece(piece.color)):
+                    #Create square for move
+                    initial = Square(row,col,piece)
+                    final = Square(possible_move_row,possible_move_col,piece)
+
+                    #create Move
+                    move = Move(initial=initial,final=final)
+                    piece.add_move(move)
+                else:
+                    break
+            else : break
+                   
+
+
+        
 
 
 
             
 
-        print(possible_moves)
 
 
     def calc_moves(self,piece, row, col):
@@ -39,7 +83,7 @@ class Board:
         '''
         # self.knight_moves(row,col,piece)
         if piece.name == PAWN:
-            pass
+            self.pawn_moves(row,col,piece)
         elif piece.name == KNIGHT:
             self.knight_moves(row,col,piece)
         elif piece.name == BISHOP:
@@ -64,6 +108,7 @@ class Board:
         #Pawn
         for col in range(COLS):
             self.squares[row_pawn][col] = Square(row_pawn,col,Pawn(color))
+        self.squares[4][4] =Square(4,4,Pawn(color))
         
         #Knights
         for col in (1,6):
