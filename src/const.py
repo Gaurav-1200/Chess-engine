@@ -11,3 +11,6 @@ ROOK ="rook"
 QUEEN ="queen"
 BISHOP = "bishop"
 KING ="king"
+
+def isValidPos(x,y):
+    return not(x<0 or y<0 or x>=ROWS or y>=COLS)
