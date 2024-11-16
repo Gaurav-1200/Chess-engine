@@ -24,6 +24,7 @@ class Main:
         # board.calc_moves(row=6,col=6,piece=p)
         while True:
             game.show_bg(screen)
+            game.show_last_move(screen)
             game.show_moves(screen)
             game.show_pieces(screen)
 
@@ -44,6 +45,7 @@ class Main:
                             dragger.save_initial(event.pos)
                             dragger.drag_piece(piece)
                             game.show_bg(screen)
+                            game.show_last_move(screen)
                             game.show_moves(screen)
                             game.show_pieces(screen)
 
@@ -53,6 +55,7 @@ class Main:
                         print("888888888888888888888")
                         dragger.update_mouse(event.pos)
                         game.show_bg(screen)
+                        game.show_last_move(screen)
                         game.show_moves(screen)
                         game.show_pieces(screen)
                         dragger.update_blit(screen)
@@ -70,7 +73,9 @@ class Main:
                         if board.valid_moves(dragger.piece,move):
                             board.move(dragger.piece,move)
                             game.show_bg(screen)
+                            game.show_last_move(screen)
                             game.show_pieces(screen)
+                           
                             #change player
                             game.next_turn()
 

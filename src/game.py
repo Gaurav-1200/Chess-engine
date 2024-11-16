@@ -46,6 +46,20 @@ class Game:
                 pygame.draw.rect(surface,color,rect)
 
             # possible_moves =self.board.calc_moves(piece=piece,row=self.dragger.initial_row,col=self.dragger.initial_col)
+    def show_last_move(self,surface):
+        if self.board.last_move:
+            initial = self.board.last_move.initial
+            final = self.board.last_move.final
+            # piece = self.board.last_move.piece
+            
+            for pos in [initial,final]:
+                #color
+                color = (244,247,116) if ((pos.row + pos.col) %2 ==0) else (172,195,51)
+                #rect
+                rect = (pos.col*SQSIZE, pos.row*SQSIZE,SQSIZE,SQSIZE)
+                #blit
+                pygame.draw.rect(surface,color,rect)
+
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'

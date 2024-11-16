@@ -8,6 +8,7 @@ class Board:
         self._create()
         self._add_pieces('white')
         self._add_pieces('black')
+        self.last_move = None
 
 
     def knight_moves(self,row,col,piece):
@@ -135,7 +136,7 @@ class Board:
         piece.moved = True
         piece.clear_moves()
 
-        piece.last_move = move
+        self.last_move = move
 
     def valid_moves(self,piece,move):
         return move in piece.moves
