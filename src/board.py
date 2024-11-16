@@ -92,7 +92,20 @@ class Board:
                 possible_move_row = possible_move_row + row_incr
                 possible_move_col = possible_move_col + col_incr
                     
+    def king_moves(self,row,col,piece):
+        dx = [0,1,1,1,0,-1,-1,-1]
+        dy = [1,1,0,-1,-1,-1,0,1]
 
+        possible_moves =[(row + dx[i],col+dy[i]) for i in range(8) if isValidPos(row+dx[i],col+dy[i])]
+        for possible_move in possible_moves:
+            if self.squares[possible_move[0]][possible_move[1]].is_empty_or_rival_piece(piece.color):  ##check
+                #Create square for move
+                initial = Square(row,col,piece)
+                final = Square(possible_move[0],possible_move[1],piece)
+
+                #create Move
+                move = Move(initial=initial,final=final)
+                piece.add_move(move)
 
     def calc_moves(self,piece, row, col):
         '''
@@ -110,7 +123,7 @@ class Board:
         elif piece.name == QUEEN:
             self.straight_line_moves(row,col,piece,[(-1,0),(0,1),(1,0),(0,-1),(-1,1),(-1,-1),(1,1),(1,-1)])
         elif piece.name == KING:
-            pass
+            self.king_moves(row,col,piece)
 
     def _create(self):
         for i in range(ROWS):
@@ -133,11 +146,6 @@ class Board:
         #Bishops
         for col in (2,5):
             self.squares[row_other][col]= Square(row_other,col,Bishop(color))
-        self.squares[4][4] =Square(4,4,Bishop(color))
-        self.squares[4][6] =Square(4,6,Rook(color))
-        self.squares[6][4] =Square(6,4,Queen(color))
-
-
 
         #Queens
         for col in [3]:
@@ -150,5 +158,3 @@ class Board:
         #King
         for col in [4]:
             self.squares[row_other][col]= Square(row_other,col,King(color))
-
-
