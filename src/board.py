@@ -26,7 +26,6 @@ class Board:
                 piece.add_move(move)
         print(possible_moves)
         
-
     def pawn_moves(self, row, col, piece):
         steps = 1 if piece.moved else 2
 
@@ -124,6 +123,23 @@ class Board:
             self.straight_line_moves(row,col,piece,[(-1,0),(0,1),(1,0),(0,-1),(-1,1),(-1,-1),(1,1),(1,-1)])
         elif piece.name == KING:
             self.king_moves(row,col,piece)
+
+    def move(self,piece,move):
+        initial = move.initial
+        final = move.final
+
+        #update board
+        self.squares[initial.row][initial.col].piece = None
+        self.squares[final.row][final.col].piece = piece
+
+        piece.moved = True
+        piece.clear_moves()
+
+        piece.last_move = move
+
+    def valid_moves(self,piece,move):
+        return move in piece.moves
+    
 
     def _create(self):
         for i in range(ROWS):

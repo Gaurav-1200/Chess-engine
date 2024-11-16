@@ -7,6 +7,7 @@ class Game:
     def __init__(self):
         self.board= Board()
         self.dragger= Dragger()
+        self.next_player = 'white'
 
     def show_bg(self,surface):
         for row in range(ROWS):
@@ -45,3 +46,7 @@ class Game:
                 pygame.draw.rect(surface,color,rect)
 
             # possible_moves =self.board.calc_moves(piece=piece,row=self.dragger.initial_row,col=self.dragger.initial_col)
+
+    def next_turn(self):
+        self.next_player = 'white' if self.next_player == 'black' else 'black'
+        return self.next_player
