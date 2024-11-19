@@ -2,6 +2,7 @@ from const import *
 from square import Square
 from piece import *
 from move import Move
+import copy 
 class Board:
     def __init__(self):
         self.squares=[[0,0,0,0,0,0,0,0] for i in range(COLS)]
@@ -20,7 +21,8 @@ class Board:
             if self.squares[possible_move[0]][possible_move[1]].is_empty_or_rival_piece(piece.color):  ##check
                 #Create square for move
                 initial = Square(row,col,piece)
-                final = Square(possible_move[0],possible_move[1],piece)
+                final_piece = self.squares[possible_move[0]][possible_move[1]].piece 
+                final = Square(possible_move[0],possible_move[1],final_piece)
 
                 #create Move
                 move = Move(initial=initial,final=final)
@@ -38,7 +40,7 @@ class Board:
                 if(self.squares[possible_move_row][col].is_empty()):
                     #Create square for move
                     initial = Square(row,col,piece)
-                    final = Square(possible_move_row,col,piece)
+                    final = Square(possible_move_row,col)
 
                     #create Move
                     move = Move(initial=initial,final=final)
@@ -57,7 +59,8 @@ class Board:
                 if(self.squares[possible_move_row][possible_move_col].has_rival_piece(piece.color)):
                     #Create square for move
                     initial = Square(row,col,piece)
-                    final = Square(possible_move_row,possible_move_col,piece)
+                    final_piece = self.squares[possible_move_row][possible_move_col].piece 
+                    final = Square(possible_move_row,possible_move_col,final_piece)
 
                     #create Move
                     move = Move(initial=initial,final=final)
@@ -75,17 +78,18 @@ class Board:
             while(1):
                 if isValidPos(possible_move_row, possible_move_col):
                     initial = Square(row,col,piece)
-                    final = Square(possible_move_row,possible_move_col,piece)
+                    final_piece = self.squares[possible_move_row][possible_move_col].piece
+                    final = Square(possible_move_row,possible_move_col,final_piece)
 
                     #create Move
                     move = Move(initial=initial,final=final)
                     if(self.squares[possible_move_row][possible_move_col].is_empty()):
                         piece.add_move(move)
                         
-                    if(self.squares[possible_move_row][possible_move_col].has_rival_piece(piece.color)):
+                    elif(self.squares[possible_move_row][possible_move_col].has_rival_piece(piece.color)):
                         piece.add_move(move)
                         break
-                    if(self.squares[possible_move_row][possible_move_col].has_team_piece(piece.color)):
+                    elif(self.squares[possible_move_row][possible_move_col].has_team_piece(piece.color)):
                         break
                 else:
                     break
@@ -173,6 +177,22 @@ class Board:
 
     def castling(self,initial, final):
         return abs(initial.col - final.col) == 2
+    
+    def in_check(self,piece,move):
+        temp_piece = copy.deepcopy(piece)
+        temp_board = copy.deepcopy(self)
+        temp_board.move(temp_piece,move)
+
+        for row in range(ROWS):
+            for col in range(COLS):
+                if temp_board.squares[row][col].has_rival_piece(temp_piece.color):
+                    rival_piece = temp_board.squares[row][col].piece
+                    temp_board.calc_moves(rival_piece,row,col)
+                    for mv in rival_piece.moves:
+                        if isinstance(mv.final.piece,King):
+                            return True
+        
+        return False
 
     def move(self,piece,move):
         initial = move.initial
