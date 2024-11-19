@@ -106,6 +106,48 @@ class Board:
                 #create Move
                 move = Move(initial=initial,final=final)
                 piece.add_move(move)
+        
+        #Castling Moves
+        if piece.moved == False:
+            #King Castle
+            right_rook = self.squares[row][7].piece
+            if isinstance(right_rook, Rook):
+                if right_rook.moved == False:
+                    for c in range(5,7):
+                        if self.squares[row][c].has_piece():   #Castling not possible, pieces in b/w
+                            break
+                        if c==6: #last col, valid castling
+                            piece.right_rook = right_rook
+                            #rook Move
+                            initial = Square(row,7)
+                            final = Square(row,5)
+                            move = Move(initial, final)
+                            right_rook.add_move(move)
+                            #king move
+                            initial = Square(row,col)
+                            final =Square(row,6)
+                            move = Move(initial,final)
+                            piece.add_move(move)
+
+            #Queen Castle
+            left_rook = self.squares[row][0].piece
+            if isinstance(left_rook, Rook):
+                if left_rook.moved == False:
+                    for c in range(1,4):
+                        if self.squares[row][c].has_piece():   #Castling not possible, pieces in b/w
+                            break
+                        if c==3: #last col, valid castling
+                            piece.left_rook = left_rook
+                            #rook Move
+                            initial = Square(row,0)
+                            final = Square(row,3)
+                            move = Move(initial, final)
+                            left_rook.add_move(move)
+                            #king move
+                            initial = Square(row,col)
+                            final =Square(row,2)
+                            move = Move(initial,final)
+                            piece.add_move(move)
 
     def calc_moves(self,piece, row, col):
         '''
@@ -125,6 +167,13 @@ class Board:
         elif piece.name == KING:
             self.king_moves(row,col,piece)
 
+    def check_promotion(self,piece,finalPos):
+        if finalPos.row ==0 or finalPos.row == 7:
+            self.squares[finalPos.row][finalPos.col].piece = Queen(piece.color)
+
+    def castling(self,initial, final):
+        return abs(initial.col - final.col) == 2
+
     def move(self,piece,move):
         initial = move.initial
         final = move.final
@@ -132,6 +181,16 @@ class Board:
         #update board
         self.squares[initial.row][initial.col].piece = None
         self.squares[final.row][final.col].piece = piece
+
+        #pawn promotion
+        if piece.name==PAWN:
+            self.check_promotion(piece,final)
+
+        #King Castling
+        if piece.name==KING:
+            if self.castling(initial,final):
+                rook = piece.left_rook if piece.left_rook != None else piece.right_rook
+                self.move(rook,rook.moves[-1])
 
         piece.moved = True
         piece.clear_moves()
