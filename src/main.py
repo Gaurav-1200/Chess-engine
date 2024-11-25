@@ -4,12 +4,14 @@ from game import Game
 from piece import Piece
 from square import Square
 from move import Move
+from FEN import *
 
 from const import *
 
 class Main:
     def __init__(self):
         pygame.init()
+        self.FEN=FEN()
         self.screen = pygame.display.set_mode( (WIDTH,HEIGHT))
         pygame.display.set_caption('Chess')
         self.game = Game()
@@ -19,6 +21,7 @@ class Main:
         game= self.game
         board = self.game.board
         dragger =self.game.dragger
+        wasMoveMade = False
 
         # p=Piece(name=KNIGHT,color='white',value=1)
         # board.calc_moves(row=6,col=6,piece=p)
@@ -84,7 +87,7 @@ class Main:
                             game.show_hovered_square(screen)
 
                             game.show_pieces(screen)
-                           
+                            wasMoveMade = True
                             #change player
                             game.next_turn()
 
@@ -101,6 +104,9 @@ class Main:
                         dragger =self.game.dragger
 
             pygame.display.update()
+            if(wasMoveMade):
+                print(self.FEN.convertBoardtoFEN(game.board,game.next_player))
+                wasMoveMade = False
 
 
 main =  Main()
