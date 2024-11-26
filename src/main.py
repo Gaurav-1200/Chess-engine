@@ -82,6 +82,7 @@ class Main:
 
                         if board.valid_moves(dragger.piece,move):
                             board.move(dragger.piece,move)
+                            board.set_true_en_passant(dragger.piece)
                             game.show_bg(screen)
                             game.show_last_move(screen)
                             game.show_hovered_square(screen)

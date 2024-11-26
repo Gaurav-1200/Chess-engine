@@ -69,6 +69,34 @@ class Board:
                     break
             else : break
         
+        #en_passant moves
+        r = 3 if piece.color == 'white' else 5
+        finalRow = 2 if piece.color == 'white' else 6
+
+        #left en_passant
+        if isValidPos(row,col-1) and r==row:
+            if(self.squares[row][col-1].has_rival_piece(piece.color)):
+                p = self.squares[row][col-1].piece
+                if isinstance(p, Pawn):
+                    if p.en_passant:
+                        initial = Square(row, col)
+                        final = Square(finalRow,col-1,p)
+                        move = Move(initial,final)
+                        piece.add_move(move)
+        #right en_passant
+        if isValidPos(row,col+1) and r==row:
+            if(self.squares[row][col+1].has_rival_piece(piece.color)):
+                p = self.squares[row][col+1].piece
+                if isinstance(p, Pawn):
+                    if p.en_passant:
+                        initial = Square(row, col)
+                        final = Square(finalRow,col+1,p)
+                        move = Move(initial,final)
+                        piece.add_move(move)
+    
+
+
+        
     def straight_line_moves(self, row, col, piece,increments):
         for incr in increments:
             row_incr, col_incr = incr
@@ -178,6 +206,17 @@ class Board:
     def castling(self,initial, final):
         return abs(initial.col - final.col) == 2
     
+    def set_true_en_passant(self, piece):
+        if not isinstance(piece, Pawn):
+            return
+        
+        for row in range(ROWS):
+            for col in range(COLS):
+                if isinstance(self.squares[row][col].piece, Pawn):
+                    self.squares[row][col].piece.en_passant = False   #Remaing Pawn ka False
+
+        piece.en_passant = True   #last wale ka sirf true;
+    
     def in_check(self,piece,move):
         temp_piece = copy.deepcopy(piece)
         temp_board = copy.deepcopy(self)
@@ -198,13 +237,22 @@ class Board:
         initial = move.initial
         final = move.final
 
+        en_passant_empty = self.squares[final.row][final.col].is_empty()
+
         #update board
         self.squares[initial.row][initial.col].piece = None
         self.squares[final.row][final.col].piece = piece
 
-        #pawn promotion
         if piece.name==PAWN:
-            self.check_promotion(piece,final)
+            #en_passant_Capture
+            diff = final.col -initial.col  #left -1, right +1 , straight = 0
+            if diff !=0 and en_passant_empty:
+                self.squares[initial.row][initial.col + diff].piece = None
+                self.squares[final.row][final.col].piece = piece
+            
+            #pawn promotion
+            else:
+                self.check_promotion(piece,final)
 
         #King Castling
         if piece.name==KING:
