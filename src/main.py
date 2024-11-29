@@ -15,6 +15,29 @@ class Main:
         self.screen = pygame.display.set_mode( (WIDTH,HEIGHT))
         pygame.display.set_caption('Chess')
         self.game = Game()
+        self.ai_enabled = True 
+
+    def ai_make_move(self):
+        """AI agent logic to make a move."""
+        board = self.game.board
+        ai_color = 'black'  # Example: AI plays as black
+
+        # Check if it's the AI's turn
+        if self.game.next_player == ai_color:
+            # best_move = self.calculate_best_move(board, ai_color)  # Implement this method
+            ai_piece =self.game.board.squares[0][1].piece
+            board.calc_moves(self.game.board.squares[0][1].piece,0,1)
+            print("best Move",ai_piece.moves[0],type(ai_piece))
+            best_move=ai_piece.moves[0]
+            print(type(best_move),best_move.initial)
+            initial = Square(0,1)
+            final = Square(best_move.final.row, best_move.final.col)
+            move = Move(initial, final)
+
+            if best_move:
+                board.move(ai_piece, best_move)
+                board.set_true_en_passant(ai_piece)
+                self.game.next_turn()
     
     def mainloop(self):
         screen =self.screen
@@ -35,7 +58,7 @@ class Main:
 
             if dragger.dragging:
                 dragger.update_blit(screen)
-
+            
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:  #click
                     print("6666666666666666666666")
@@ -103,6 +126,9 @@ class Main:
                         game= self.game
                         board = self.game.board
                         dragger =self.game.dragger
+        
+            if self.ai_enabled and not dragger.dragging:
+                self.ai_make_move()
 
             pygame.display.update()
             if(wasMoveMade):
