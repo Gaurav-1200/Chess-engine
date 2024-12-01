@@ -13,4 +13,6 @@ BISHOP = "bishop"
 KING ="king"
 
 def isValidPos(x,y):
+    x = int(x)
+    y = int(y)
     return not(x<0 or y<0 or x>=ROWS or y>=COLS)

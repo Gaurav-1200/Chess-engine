@@ -22,6 +22,7 @@ class FEN:
         return charBd
 
     def convertBoardtoFEN(self,board,next_player):
+        print("We Came here ####################")
         charBd = self.convertBoardtoCharBd(board)
         fen = []
 
@@ -57,7 +58,7 @@ class FEN:
         fen_string += ' '
         fen_string += str(board.numTotalMoves)
 
-
+        print("FEN STRING IS ",fen_string)
 
         return fen_string
 

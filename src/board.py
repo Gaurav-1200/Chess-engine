@@ -14,6 +14,7 @@ class Board:
         self.hasBlackCastled = False
         self.numTotalMoves = 0
         self.numHalfMoves = 0
+        self.fenString = ""
 
 
     def knight_moves(self,row,col,piece):
