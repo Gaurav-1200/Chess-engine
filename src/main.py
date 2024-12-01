@@ -15,7 +15,7 @@ class Main:
         self.screen = pygame.display.set_mode( (WIDTH,HEIGHT))
         pygame.display.set_caption('Chess')
         self.game = Game()
-        self.ai_enabled = True 
+        self.ai_enabled = False
 
     def ai_make_move(self):
         """AI agent logic to make a move."""

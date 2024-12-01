@@ -10,6 +10,8 @@ class Board:
         self._add_pieces('white')
         self._add_pieces('black')
         self.last_move = None
+        self.hasWhiteCastled = False
+        self.hasBlackCastled = False
 
 
     def knight_moves(self,row,col,piece):
@@ -160,6 +162,10 @@ class Board:
                             final =Square(row,6)
                             move = Move(initial,final)
                             piece.add_move(move)
+                            if piece.color == 'white':
+                                self.hasWhiteCastled = True
+                            else :
+                                self.hasBlackCastled = True
 
             #Queen Castle
             left_rook = self.squares[row][0].piece
@@ -180,6 +186,11 @@ class Board:
                             final =Square(row,2)
                             move = Move(initial,final)
                             piece.add_move(move)
+                            if piece.color == 'white':
+                                self.hasWhiteCastled = True
+                            else :
+                                self.hasBlackCastled = True
+
 
     def calc_moves(self,piece, row, col):
         '''

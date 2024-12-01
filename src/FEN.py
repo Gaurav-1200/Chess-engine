@@ -47,6 +47,12 @@ class FEN:
         fen_string += ' '
         fen_string += 'w' if next_player == 'white' else 'b'
 
+        fen_string += ' '
+        fen_string += 'kq' if board.hasBlackCastled == False else "--"
+        fen_string += 'KQ' if board.hasWhiteCastled == False else "--"
+
+
+
         return fen_string
 
 
