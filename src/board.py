@@ -12,6 +12,8 @@ class Board:
         self.last_move = None
         self.hasWhiteCastled = False
         self.hasBlackCastled = False
+        self.numTotalMoves = 0
+        self.numHalfMoves = 0
 
 
     def knight_moves(self,row,col,piece):

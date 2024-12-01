@@ -72,6 +72,8 @@ class Game:
 
 
     def next_turn(self):
+        self.board.numTotalMoves += 1
+        self.board.numHalfMoves += 1
         self.next_player = 'white' if self.next_player == 'black' else 'black'
         return self.next_player
     

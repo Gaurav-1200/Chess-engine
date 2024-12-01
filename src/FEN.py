@@ -51,6 +51,12 @@ class FEN:
         fen_string += 'kq' if board.hasBlackCastled == False else "--"
         fen_string += 'KQ' if board.hasWhiteCastled == False else "--"
 
+        fen_string += ' '
+        fen_string += str(board.numHalfMoves)
+
+        fen_string += ' '
+        fen_string += str(board.numTotalMoves)
+
 
 
         return fen_string

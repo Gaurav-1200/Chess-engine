@@ -1,7 +1,7 @@
 import pygame
 import sys
 from game import Game
-from piece import Piece
+from piece import *
 from square import Square
 from move import Move
 from FEN import *
@@ -101,6 +101,11 @@ class Main:
 
                         initial = Square(dragger.initial_row,dragger.initial_col)
                         final =  Square(released_row,released_col)
+
+                        isThisMoveCapture = False
+                        if(board.squares[released_row][released_col].has_rival_piece(dragger.piece.color)):
+                            isThisMoveCapture = True
+
                         move  = Move(initial,final)
 
                         if board.valid_moves(dragger.piece,move):
@@ -112,6 +117,8 @@ class Main:
 
                             game.show_pieces(screen)
                             wasMoveMade = True
+                            if(isinstance(dragger.piece,Pawn) or isThisMoveCapture):
+                                board.numHalfMoves = -1 #so ++ makes it 0
                             #change player
                             game.next_turn()
 
