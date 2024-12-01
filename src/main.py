@@ -34,6 +34,11 @@ class Main:
 
     def ai_make_move(self):
         """AI agent logic to make a move."""
+        self.game.show_bg(self.screen)
+        self.game.show_last_move(self.screen)
+        self.game.show_hovered_square(self.screen)
+
+        self.game.show_pieces(self.screen)
         board = self.game.board
         ai_color = 'black'  # Example: AI plays as black
         if(self.game.next_player=="black"):
@@ -186,11 +191,10 @@ class Main:
                             game.show_pieces(screen)
                             wasMoveMade = True
                             if(isinstance(dragger.piece,Pawn) or isThisMoveCapture):
-                                board.numHalfMoves = -1 #so ++ makes it 0
+                                board.numHalfMoves = 0 #so ++ makes it 0
                             #change player
-                            
-
                     dragger.undrag_piece()
+
                 elif event.type== pygame.QUIT:  #quit
                     pygame.quit()
                     sys.exit()
@@ -209,8 +213,9 @@ class Main:
             if(wasMoveMade):
                 self.game.board.fen_string = self.FEN.convertBoardtoFEN(game.board,game.next_player)
                 print(self.game.board.fen_string)
-                wasMoveMade = False
                 game.next_turn()
+                wasMoveMade = False
+
 
 
 main =  Main()
